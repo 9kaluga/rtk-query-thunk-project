@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-type State = {
+export type State = {
     counter: number
 };
 
@@ -21,11 +21,13 @@ const initialState: State = {
 const reducer = (state = initialState, action: Action): State => {
     switch (action.type) {
         case 'increment':
+            console.log(state.counter);
             return {
                 ...state,
                 counter: state.counter + 1,
             };
         case 'decrement':
+            console.log(state.counter);
             return {
                 ...state,
                 counter: state.counter - 1,
