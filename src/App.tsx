@@ -1,24 +1,12 @@
-// import { useState, useEffect, useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import type { State, IncrementAction, DecrementAction } from './store'
-import { useSelector } from 'react-redux'
+import type { State, IncrementAction, DecrementAction, CounterId } from './store'
+// import { useSelector } from 'react-redux'
 import { store } from './store'
 
 function App() {
-  // const [count, setCount] = useState(0)
-
-  // const [, forceUpdate] = useReducer((x) => x + 1, 0);
-
-  // useEffect(() => {
-  //   const unsubscribe = store.subscribe(() => {
-  //     forceUpdate();
-  //   });
-  //   return unsubscribe;
-  // }, []);
-
-  const counter = useSelector((state: State) => state.counter);
 
   return (
     <>
@@ -31,16 +19,33 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
-      <div className="card">
-        counter {counter} <br/>
-        {/* counter {store.getState().counter} <br/> */}
-        <button onClick={() => store.dispatch({ type: "decrement" } satisfies DecrementAction)}>
-          decrement
-        </button>
-        <button onClick={() => store.dispatch({ type: "increment" } satisfies IncrementAction)}>
-          increment
-        </button>
-      </div>
+      <Counter counterId="first"/>
+      <Counter counterId="second"/>
+    </>
+  )
+}
+
+export function Counter({ counterId }: { counterId: CounterId }){
+
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  console.log('render counter:', counterId);
+  
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      forceUpdate();
+    });
+    return unsubscribe;
+  }, []);
+
+  return (
+    <>
+      counter {store.getState().counters[counterId]?.counter}
+      <button onClick={() => store.dispatch({ type: "decrement", payload: { counterId } } satisfies DecrementAction)}>
+        decrement
+      </button>
+      <button onClick={() => store.dispatch({ type: "increment", payload: { counterId } } satisfies IncrementAction)}>
+        increment
+      </button>
     </>
   )
 }
