@@ -1,9 +1,18 @@
-import { useEffect, useReducer, useRef, useState } from 'react'
+import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { type IncrementAction, type DecrementAction, type CounterId, type AppState, type store, useAppDispatch, useAppSelector, selectCounter } from './store'
+import { 
+  useAppSelector, 
+  selectCounter 
+} from './store'
+import type { 
+  IncrementAction, 
+  DecrementAction, 
+  CounterId, 
+} from './store'
 import { useDispatch } from 'react-redux'
+import { UsersList } from './user-list'
 // import { useSelector } from 'react-redux'
 
 function App() {
@@ -22,6 +31,7 @@ function App() {
       <Counter counterId="first"/>
       <Counter counterId="second"/>
       <Test/>
+      <UsersList/>
 
     </>
   )
