@@ -1,10 +1,10 @@
-import { useEffect, useReducer } from 'react'
+import { useEffect, useReducer, useRef, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import type { State, IncrementAction, DecrementAction, CounterId } from './store'
+import { type IncrementAction, type DecrementAction, type CounterId, type AppState, type store, useAppDispatch, useAppSelector, selectCounter } from './store'
+import { useDispatch } from 'react-redux'
 // import { useSelector } from 'react-redux'
-import { store } from './store'
 
 function App() {
 
@@ -21,31 +21,65 @@ function App() {
       <h1>Vite + React</h1>
       <Counter counterId="first"/>
       <Counter counterId="second"/>
+      <Test/>
+
     </>
   )
 }
 
 export function Counter({ counterId }: { counterId: CounterId }){
 
+const dispatch = useDispatch();
+const counterState = useAppSelector((state) => selectCounter(state, counterId))
+
+console.log('render counter:', counterId);
+
+/*
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
-  console.log('render counter:', counterId);
+
   
+  const lastStateRef = useRef<ReturnType<typeof selectCounter>>(undefined)
+
   useEffect(() => {
     const unsubscribe = store.subscribe(() => {
-      forceUpdate();
+
+      const currentState = selectCounter(store.getState(), counterId);
+      const lastState = lastStateRef.current;
+
+      if(currentState !== lastState){
+        forceUpdate();
+      }
+
+      lastStateRef.current = currentState;
+
     });
+
     return unsubscribe;
   }, []);
+*/
 
   return (
     <>
-      counter {store.getState().counters[counterId]?.counter}
-      <button onClick={() => store.dispatch({ type: "decrement", payload: { counterId } } satisfies DecrementAction)}>
+    counter {counterState?.counter}<br/>
+      <button onClick={() => dispatch({ type: "decrement", payload: { counterId } } satisfies DecrementAction)}>
         decrement
       </button>
-      <button onClick={() => store.dispatch({ type: "increment", payload: { counterId } } satisfies IncrementAction)}>
+
+    <button onClick={() => dispatch({ type: "increment", payload: { counterId } } satisfies IncrementAction)}>
         increment
-      </button>
+      </button><br/>
+    </>
+  )
+}
+
+export function Test(){
+
+  const [test, setTest] = useState("")
+
+  return(
+    <>
+      <p>My test: {test}</p>
+      <input onChange={({target}) => {setTest(target.value)}}/>
     </>
   )
 }
