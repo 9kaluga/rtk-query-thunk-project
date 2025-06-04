@@ -4,9 +4,8 @@ import {
     useAppDispatch, 
     useAppSelector
 } from "./store"
-import type{ 
+import type { 
     AppState,
-    User, 
     UserId,
     UserRemoveSelectedAction, 
     UserSelectedAction 
@@ -27,11 +26,6 @@ const selectSortedUsers = createAppSelector(
                 }
             })
 );
-
-const selectSelectedUser = (state: AppState) => 
-    state.users.selectedUserId
-    ? state.users.entities[state.users.selectedUserId] 
-    : undefined;
 
 export function UsersList() {
     console.log("render user list");
