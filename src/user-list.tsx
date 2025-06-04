@@ -1,34 +1,48 @@
-import { useMemo, useState } from "react";
+import { memo, useState } from "react";
 import {
+    createAppSelector,
     useAppDispatch, 
     useAppSelector
 } from "./store"
 import type{ 
+    AppState,
     User, 
+    UserId,
     UserRemoveSelectedAction, 
     UserSelectedAction 
 } from "./store";
 
+const selectSortedUsers = createAppSelector(
+    (state: AppState) => state.users.ids,
+    (state: AppState) => state.users.entities,
+    (_: AppState, sort: "asc" | "desc") => sort,
+    (ids, entities, sort) => 
+        ids
+            .map((id) => entities[id])
+            .sort((a, b) => {
+                if (sort === "asc") {
+                    return a.name.localeCompare(b.name);
+                } else {
+                    return b.name.localeCompare(a.name);
+                }
+            })
+);
+
+const selectSelectedUser = (state: AppState) => 
+    state.users.selectedUserId
+    ? state.users.entities[state.users.selectedUserId] 
+    : undefined;
 
 export function UsersList() {
+    console.log("render user list");
     const [sortType, setSortType] = useState<"asc" | "desc">("asc");
 
-    const ids = useAppSelector((state) => state.users.ids);
-    const entities = useAppSelector((state) => state.users.entities);
-    const selectedUserId = useAppSelector((state) => state.users.selectedUserId);
-    const selectedUser = selectedUserId ? entities[selectedUserId] : undefined;
-
-    const sortedUsers = useMemo(
-        () => ids
-        .map((id) => entities[id])
-        .sort((a, b) => {
-            if (sortType === "asc") {
-                return a.name.localeCompare(b.name);
-            } else {
-                return b.name.localeCompare(a.name);
-            }
-        }), [ids, entities, sortType]
+    const sortedUsers = useAppSelector((state) => 
+        selectSortedUsers(state, sortType)
     );
+
+    const selectedUserId = useAppSelector((state) => state.users.selectedUserId);
+
     return (
       <div className="flex flex-col items-center">
         {!selectedUserId ? (
@@ -49,18 +63,21 @@ export function UsersList() {
             </div>
             <ul className="list-none">
               {sortedUsers.map((user) => (
-                <UserListItem user={user} key={user.id} />
+                <UserListItem userId={user.id} key={user.id} />
               ))}
             </ul>
           </div>
         ) : (
-          <SelectedUser user={selectedUser} />
+          <SelectedUser userId={selectedUserId} />
         )}
       </div>
     );
   }
 
- function UserListItem({ user }: { user: User }) {
+ const UserListItem = memo(function UserListItem({ userId }: { userId: UserId }) {
+    console.log("render", userId);
+    
+    const user = useAppSelector((state) => state.users.entities[userId])
     const dispatch = useAppDispatch();
     const handleUserClick = () => {
         dispatch({
@@ -73,10 +90,11 @@ export function UsersList() {
         <span className="hover:underline cursor-pointer">{user.name}</span>
       </li>
     );
-  };
-  
-  function SelectedUser({ user }: { user: User }) {
+  });
+
+  function SelectedUser({ userId }: { userId: UserId }) {
     const dispatch = useAppDispatch();
+    const user = useAppSelector((state) => state.users.entities[userId])
     const handleBackButtonClick = () => {
         dispatch({
             type: "userRemoveSelected",
