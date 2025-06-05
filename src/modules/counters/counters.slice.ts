@@ -21,18 +21,18 @@ const initialCounterState: CounterState = {counter: 0};
 const initialCountersState: CountersState = {};
 
 export const countersReduser = 
-createReducer(initialCountersState, (builder) => {
-    builder.addCase(incrementAction, (state, action) => {
-        const { counterId } = action.payload;
-        const currentCounter = state[counterId] ?? initialCounterState
-            return {
-                ...state,
-                [counterId]:{
-                    ...currentCounter,
-                    counter: currentCounter.counter + 1
-                }
-            };
-        });
+    createReducer(initialCountersState, (builder) => {
+        builder.addCase(incrementAction, (state, action) => {
+            const { counterId } = action.payload;
+            const currentCounter = state[counterId] ?? initialCounterState
+                return {
+                    ...state,
+                    [counterId]:{
+                        ...currentCounter,
+                        counter: currentCounter.counter + 1
+                    }
+                };
+            });
         builder.addCase(decrementAction, (state, action) => {
             const { counterId } = action.payload;
             const currentCounter = state[counterId] ?? initialCounterState

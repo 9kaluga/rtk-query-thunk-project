@@ -6,8 +6,6 @@ export default function Counter({ counterId }: { counterId: CounterId }){
 
     const dispatch = useDispatch();
     const counterState = useAppSelector((state) => selectCounter(state, counterId))
-    
-    console.log('render counter:', counterId);
 
       return (
         <>
