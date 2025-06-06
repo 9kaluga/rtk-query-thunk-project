@@ -1,5 +1,5 @@
 {
-  "name": "redux-ts-project",
+  "name": "rtk-query-thunk-project",
   "private": true,
   "version": "0.0.0",
   "type": "module",
