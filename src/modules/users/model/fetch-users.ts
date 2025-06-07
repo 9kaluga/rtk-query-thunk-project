@@ -2,11 +2,11 @@ import type { AppThunk } from "../../../store";
 import { usersSlice } from "../users.slice";
 
 export const fetchUsers = 
-    (): AppThunk => 
+    ({refetch} : { refetch?: boolean } = {}): AppThunk => 
     (dispatch, getState, { api }) => {
         const isIdle = usersSlice.selectors.selectIsFetchUsersIdle(getState());
 
-        if(!isIdle) {
+        if(!isIdle && !refetch) {
             return;
         }
 

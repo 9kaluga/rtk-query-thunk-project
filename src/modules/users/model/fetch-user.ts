@@ -4,7 +4,7 @@ import { usersSlice, type UserId } from "../users.slice";
 export const fetchUser = 
     (userId: UserId): AppThunk => 
     (dispatch, getState, { api }) => {
-        const isPending = usersSlice.selectors.selectIsFetchUserPending(
+        const isPending = usersSlice.selectors.selectIsFetchUsersPending(
             getState()
         );
 

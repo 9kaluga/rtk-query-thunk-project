@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { usersSlice, type UserId } from "./users.slice";
 import { useEffect } from "react";
 import { fetchUser } from "./model/fetch-user";
+import { deleteUser } from "./model/delete-user";
 
  export function UserInfo() {
     const dispatch = useAppDispatch();
@@ -23,6 +24,13 @@ import { fetchUser } from "./model/fetch-user";
         navigate("..", { relative: "path" });
     };
     
+    const handleDeleteButtonClick = async () => {
+        // if (!id) {
+        //   return;
+        // }
+        dispatch(deleteUser(id)).then(() => navigate("..", { relative: "path" }));
+      };
+
     if (isPending || !user) {
         return <div>Loading...</div>
     }
@@ -37,6 +45,13 @@ import { fetchUser } from "./model/fetch-user";
         </button>
         <h2 className="text-3xl">{user.name}</h2>
         <p className="text-xl">{user.description}</p>
+        <button
+        onClick={handleDeleteButtonClick}
+        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        // disabled={isLoadingDelete}
+      >
+        Delete
+      </button>
       </div>
     );
   }
