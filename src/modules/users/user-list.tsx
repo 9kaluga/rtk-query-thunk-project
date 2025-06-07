@@ -1,11 +1,11 @@
 import { memo, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector, useAppStore } from "../../store"
 import { usersSlice, type UserId } from "./users.slice"
-import { useDispatch } from "react-redux";
 import { fetchUsers } from "./model/fetch-users";
+import { useNavigate } from "react-router-dom";
 
 export function UsersList() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const appStore = useAppStore();
     const [sortType, setSortType] = useState<"asc" | "desc">("asc");
 
@@ -13,14 +13,12 @@ export function UsersList() {
     
     
     useEffect(() => {
-      fetchUsers(appStore.dispatch, appStore.getState)
+      dispatch(fetchUsers())
     }, [dispatch, appStore]);
 
     const sortedUsers = useAppSelector((state) =>
       usersSlice.selectors.selectSortedUsers(state, sortType)
     );
-
-    const selectedUserId = useAppSelector(usersSlice.selectors.selectSelectedUserId);
 
     if (isPending) {
       return <div>Loading...</div>
@@ -28,7 +26,6 @@ export function UsersList() {
     
     return (
       <div className="flex flex-col items-center">
-        {!selectedUserId ? (
           <div className="flex flex-col items-center justify-between">
             <div className="flex flex-row items-center">
               <button
@@ -50,44 +47,25 @@ export function UsersList() {
               ))}
             </ul>
           </div>
-        ) : (
-          <SelectedUser userId={selectedUserId} />
-        )}
       </div>
     );
   }
 
  const UserListItem = memo(function UserListItem({ userId }: { userId: UserId }) {
     
+    const navigate = useNavigate();
     const user = useAppSelector((state) => state.users.entities[userId])
-    const dispatch = useAppDispatch();
     const handleUserClick = () => {
-      dispatch(usersSlice.actions.selected({ userId }));
+      navigate(userId, { relative: "path" });
     };
+
+    if (!user){
+      return null;
+    }
+
     return (
       <li key={user.id} className="py-2" onClick={handleUserClick}>
         <span className="hover:underline cursor-pointer">{user.name}</span>
       </li>
     );
   });
-
-  function SelectedUser({ userId }: { userId: UserId }) {
-    const dispatch = useAppDispatch();
-    const user = useAppSelector((state) => state.users.entities[userId])
-    const handleBackButtonClick = () => {
-        dispatch(usersSlice.actions.selectRemove());
-    };
-  
-    return (
-      <div className="flex flex-col items-center">
-        <button
-          onClick={handleBackButtonClick}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded md"
-        >
-          Back
-        </button>
-        <h2 className="text-3xl">{user.name}</h2>
-        <p className="text-xl">{user.description}</p>
-      </div>
-    );
-  }
