@@ -1,8 +1,8 @@
 import { memo, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector, useAppStore } from "../../store"
 import { usersSlice, type UserId } from "./users.slice"
-import { api } from "../../shared/api";
 import { useDispatch } from "react-redux";
+import { fetchUsers } from "./model/fetch-users";
 
 export function UsersList() {
     const dispatch = useDispatch();
@@ -13,22 +13,7 @@ export function UsersList() {
     
     
     useEffect(() => {
-      const isIdle = usersSlice.selectors.selectIsFetchUsersIdle(
-        appStore.getState()
-      );
-
-      if(!isIdle) {
-        return;
-      }
-
-      dispatch(usersSlice.actions.fetchUsersPending());
-      api.getUsers()
-      .then((users) => {
-        dispatch(usersSlice.actions.fetchUsersSuccess({ users }));
-      })
-      .catch(() => {
-        dispatch(usersSlice.actions.fetchUsersFailed());
-      })
+      fetchUsers(appStore.dispatch, appStore.getState)
     }, [dispatch, appStore]);
 
     const sortedUsers = useAppSelector((state) =>

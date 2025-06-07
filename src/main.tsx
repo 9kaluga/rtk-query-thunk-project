@@ -4,6 +4,9 @@ import App from './App.tsx'
 import { Provider } from 'react-redux'
 import { store } from './store';
 import './index.css'
+import { fetchUsers } from './modules/users/model/fetch-users.ts';
+
+fetchUsers(store.dispatch, store.getState);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
