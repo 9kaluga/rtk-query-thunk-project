@@ -4,7 +4,7 @@ const baseUrl = "http://localhost:3000";
 
 const UserDtoSchema = z.object({
     id: z.string(),
-    user: z.string(),
+    name: z.string(),
     description: z.string()
 })
 
