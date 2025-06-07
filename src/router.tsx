@@ -2,12 +2,15 @@ import { createBrowserRouter, Link, Outlet, redirect } from "react-router-dom";
 import { UsersList } from "./modules/users/user-list";
 import Counter from "./modules/counters/Counter";
 import { UserInfo } from "./modules/users/user-info";
+import { store } from "./store";
+import { fetchUser } from "./modules/users/model/fetch-user";
+import { fetchUsers } from "./modules/users/model/fetch-users";
 
 
-// const loadStore = () =>
-//   new Promise((resolve) => {
-//     setTimeout(() => resolve(store), 0);
-//   });
+const loadStore = () =>
+  new Promise((resolve) => {
+    setTimeout(() => resolve(store), 0);
+  });
 
 export const router = createBrowserRouter([
   {
@@ -29,25 +32,22 @@ export const router = createBrowserRouter([
       {
         path: "users",
         element: <UsersList />,
-        // loader: () => {
-        //   loadStore().then(async () => {
-        //     store.dispatch(usersApi.util.prefetch("getUsers", undefined, {}));
-        //   });
-        //   return null;
-        // },
+        loader: () => {
+          loadStore().then(async () => {
+            store.dispatch(fetchUsers());
+          });
+          return null;
+        },
       },
       {
         path: "users/:id",
-        // element: <div>User</div>,
         element: <UserInfo />,
-        // loader: ({ params }) => {
-        //   loadStore().then(() => {
-        //     store.dispatch(
-        //       usersApi.util.prefetch("getUser", params.id ?? "", {})
-        //     );
-        //   });
-        //   return null;
-        // },
+        loader: ({ params }) => {
+          loadStore().then(() => {
+            store.dispatch(fetchUser(params.id ?? ""));
+          });
+          return null;
+        },
       },
       {
         path: "counters",
