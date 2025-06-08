@@ -1,10 +1,10 @@
 import { createBrowserRouter, Link, Outlet, redirect } from "react-router-dom";
-import { UsersList } from "./modules/users/user-list";
-import Counter from "./modules/counters/Counter";
-import { UserInfo } from "./modules/users/user-info";
+import { UsersList } from "../modules/users/user-list";
+import Counter from "../modules/counters/Counter";
+import { UserInfo } from "../modules/users/user-info";
+import { fetchUser } from "../modules/users/model/fetch-user";
+import { fetchUsers } from "../modules/users/model/fetch-users";
 import { store } from "./store";
-import { fetchUser } from "./modules/users/model/fetch-user";
-import { fetchUsers } from "./modules/users/model/fetch-users";
 
 
 const loadStore = () =>

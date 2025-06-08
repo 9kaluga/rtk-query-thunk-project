@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../shared/redux";
 import { usersSlice, type UserId } from "./users.slice";
 import { deleteUser } from "./model/delete-user";
 

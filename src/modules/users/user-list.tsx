@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { useAppSelector } from "../../store"
+import { useAppSelector } from "../../shared/redux"
 import { usersSlice, type UserId } from "./users.slice"
 import { useNavigate } from "react-router-dom";
 
