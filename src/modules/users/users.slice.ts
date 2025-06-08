@@ -1,7 +1,6 @@
 import { createSelector, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export type UserId = string;
-
 export type User = {
     id: UserId;
     name: string;
@@ -90,7 +89,6 @@ export const usersSlice = createSlice({
         },
         deleteUserSuccess: (state, action: PayloadAction<{ userId: UserId }>) => {
             state.fetchUserStatus = "success";
-
             delete state.entities[action.payload.userId];
             state.ids = state.ids.filter((id) => id !== action.payload.userId);
         },
